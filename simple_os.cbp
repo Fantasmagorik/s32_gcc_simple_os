@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="simple_os" />
+		<Option pch_mode="2" />
+		<Option compiler="arm-elf-gcc" />
+		<Build>
+			<Target title="default">
+				<Option output="default/simple_os.elf" prefix_auto="0" extension_auto="0" />
+				<Option object_output="default" />
+				<Option type="1" />
+				<Option compiler="arm-elf-gcc" />
+				<Compiler>
+					<Add option="-g" />
+				</Compiler>
+				<ExtraCommands>
+					<Add after="arm-none-eabi-objcopy -Obinary default/simple_os.elf simple_os.bin" />
+					<Add after="arm-none-eabi-size default/simple_os.elf" />
+				</ExtraCommands>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Wall" />
+			<Add option="-g" />
+			<Add option="-mcpu=cortex-m3" />
+			<Add option="-fno-common" />
+			<Add option="-mthumb" />
+			<Add directory="src" />
+			<Add directory="h" />
+		</Compiler>
+		<Linker>
+			<Add option="-T ld/test.ld" />
+		</Linker>
+		<Unit filename="h/common_types.h" />
+		<Unit filename="h/core_cm3.h" />
+		<Unit filename="h/ex_ili9341.h" />
+		<Unit filename="h/font_proto.h" />
+		<Unit filename="h/hw_dma.h" />
+		<Unit filename="h/hw_mcu.h" />
+		<Unit filename="h/hw_spi.h" />
+		<Unit filename="h/hw_uart.h" />
+		<Unit filename="h/os_func.h" />
+		<Unit filename="h/stdint.h" />
+		<Unit filename="h/stm32f103x.s" />
+		<Unit filename="h/stm32f103xb.h" />
+		<Unit filename="ld/test.ld" />
+		<Unit filename="src/ex_ili9341.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="src/font_Century16.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="src/font_arial24.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="src/font_lucida10.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="src/hw_dma.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="src/hw_mcu.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="src/hw_spi.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="src/hw_uart.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="src/logic.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="src/main.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="src/os_func.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="src/os_kernel.s" />
+		<Unit filename="src/startup.s" />
+		<Extensions>
+			<code_completion />
+			<debugger>
+				<remote_debugging target="default">
+					<options conn_type="0" serial_baud="115200" ip_address="localhost" ip_port="4242" additional_cmds="set architecture arm" />
+				</remote_debugging>
+			</debugger>
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>
