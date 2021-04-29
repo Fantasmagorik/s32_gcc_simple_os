@@ -1,4 +1,5 @@
 #include <stm32f103xb.h>
+#include "common_types.h"
 #define BLINK_IO    13
 
 extern int TASK_EN;
@@ -37,6 +38,7 @@ int hwInit()
     ILI9341Init();
     //delay_ms(200);
     DMAInit();
+    RTCSetState(enable);
     //UART3SendString("\r\nILI9341 Init  FAIL\r\n");
 
 }

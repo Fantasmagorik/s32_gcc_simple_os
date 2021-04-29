@@ -23,24 +23,18 @@ void TaskInit()
     currentTaskActive = 0;
     TASK_EN = 1;
 }
-//Launch the next task
-void TaskMngr()
-{
-    //will present as PendSV_Handler in os_kernel
 
-    /* int i = 0, x;
-     struct _task *task;
-     while(1){
-         task = (struct _task*) TASKS + i;
-         if((task->delay == 0) && (task->func))  {
-             //switch context
-             asm("nop");
-
-         }
-
-     }*/
-
+int TaskFind(callback func) {
+    int i;
+    struct _task *task;
+    for(i = 0, task = TASKS; i < TASK_COUNT; i++) {
+        if(task->func == func)
+            return i + 1;
+        }
+    return 0;
 }
+
+
 int addTask(callback func, uint16_t delay, uint16_t repeat)
 {
     int i;

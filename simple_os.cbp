@@ -34,17 +34,24 @@
 		</Linker>
 		<Unit filename="h/common_types.h" />
 		<Unit filename="h/core_cm3.h" />
+		<Unit filename="h/ex_dht22.h" />
 		<Unit filename="h/ex_ili9341.h" />
 		<Unit filename="h/font_proto.h" />
 		<Unit filename="h/hw_dma.h" />
 		<Unit filename="h/hw_mcu.h" />
+		<Unit filename="h/hw_rtc.h" />
 		<Unit filename="h/hw_spi.h" />
 		<Unit filename="h/hw_uart.h" />
+		<Unit filename="h/l_ftime.h" />
+		<Unit filename="h/logic.h" />
 		<Unit filename="h/os_func.h" />
 		<Unit filename="h/stdint.h" />
 		<Unit filename="h/stm32f103x.s" />
 		<Unit filename="h/stm32f103xb.h" />
 		<Unit filename="ld/test.ld" />
+		<Unit filename="src/ex_dht22.c">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Unit filename="src/ex_ili9341.c">
 			<Option compilerVar="CC" />
 		</Unit>
@@ -63,10 +70,16 @@
 		<Unit filename="src/hw_mcu.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="src/hw_rtc.c">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Unit filename="src/hw_spi.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="src/hw_uart.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="src/l_ftime.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="src/logic.c">

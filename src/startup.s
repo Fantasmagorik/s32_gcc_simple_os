@@ -58,7 +58,7 @@ Infinite_Loop:
 *
 ******************************************************************************/
   .section .i_vectors,"a"
-	.equ _estack, 0x20002000
+	.equ _estack, 0x20003000
 Vectors:
 
   .word _estack

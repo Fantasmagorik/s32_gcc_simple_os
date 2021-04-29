@@ -1,5 +1,5 @@
 //font
-#define PRINTBUFFERLENGTH	1960 
+#define PRINTBUFFERLENGTH	1960
 
 #ifndef FONT_STRUCT
 #define FONT_STRUCT
@@ -9,6 +9,10 @@
 //		const char *addrFontDataStart;
 //		const struct protoFontDescriptors *addrFontDescriptor;
 //	};
+
+enum SETState{
+    disable,
+     enable};
 
 struct coordinates{
 	short xS, yS, xE, yE;
@@ -26,9 +30,9 @@ struct coordinates{
 		const struct	_lettersInfo *lettersInfoStart;
 		char 					height;
 		char letterOffset;
-		
+
 	};
-	
+
 struct _terminalWindow{
   struct coordinates position;
 	struct _fontInformation *font;
@@ -46,7 +50,7 @@ struct _terminalWindow{
 		unsigned width : 8;
 		unsigned position : 18;
 	};
-	
+
 	enum	_bufferState	{
 		free, blocked,  ready
 	};
@@ -71,8 +75,8 @@ struct taskPrint	{
 	char currentX, currentY,
 			 limitX	 , limitY;
 	struct protoFontInformation *font;
-	
-	
+
+
 };
 
 #endif

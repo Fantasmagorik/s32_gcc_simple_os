@@ -15,6 +15,7 @@ typedef void (*callback) (void);
 
 void TaskDispatch(void);
 void TaskInit(void);
+int TaskFind(void (*func)());
 
 struct _task{
     callback func;
@@ -24,6 +25,7 @@ struct _task{
 
 int wait_for_event(uint16_t *byte_addr, uint16_t mask, uint8_t expected_value, uint32_t timeout);
 void delay_ms(uint32_t timeout);
+
 
 
 

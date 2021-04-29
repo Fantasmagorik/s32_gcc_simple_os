@@ -59,61 +59,6 @@ void terminalNewLine()	{
 	wait_for_event((unsigned short*) &USART3->SR, USART_SR_TXE, 1, 3000);
 	USART3->DR = '\n';
 }
-int stringTest(char *a, char *b)	{
-	int counter = 0;
-	while(*b > 32)	{
-		if(*a != *b)
-			return 1;
-		a++;
-		b++;
-		counter++;
-	}
-
-	return(!counter);
-
-}
-
-char *getOneWord(char *string, char number)	{
-	int i;
-	char *ukStartWord = operationBuffer;
-	char *ukString = string;
-
-	for(i = 0; i < RX_BUFFER_LENGTH; i++)	 //clear buffer
-		*ukStartWord++ = 0;
-	ukStartWord = operationBuffer;
-
-	for(i = 0; i != number; i++)	{
-		while(*ukString != 32)	{		//move forward for looking a SPACE
-				ukString++;
-		}
-		for(; *ukString < 33 && *ukString != 0; ukString++);
-	}
-//	if(number)
-//		ukString++;
-	i = 0;
-	while( (*(ukString + i) >  32) && (i < MAX_COMMAND_LENGTH) )	{
-		*(ukStartWord + i) = *(ukString + i);
-		i++;
-	}
-	*(ukStartWord + i) = 0;
-	return operationBuffer;
-}
-
-int wc(char *string, char delim)	{
-	int i = 0, x;	//
-	for(; *string < 33 && *string != 0; string++); //find a symbol
-
-	for(; *string != 0; string++)
-		if( *string == delim) {
-			for(; *string < 33 && *string != 0; string++);
-			if(*string != 0)
-				i++;
-			else
-				return i;
-		}
-
-	return i;
-}
 
 
 

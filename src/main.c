@@ -3,19 +3,31 @@
 #include "os_func.h"
 #include "common_types.h"
 #include "ex_ili9341.h"
+#include "hw_rtc.h"
+#include "logic.h"
 
-
+ftime_t *time;
 
 struct _fontInformation* fontArial24Init(void);
 struct _fontInformation* fontCentury16Init();
 struct _fontInformation* fontLucida10Init();
 struct _fontInformation *curFont;
 
+
 struct _terminalWindow Console, Info, Clock;
 extern const short unsigned colors16 [] ;
 
 uint16_t currColor = 0;
 uint16_t currColor1 = 13;
+
+void printTime()    {
+    char *str;
+    cClear(&Clock);
+    time = RTCGetTime();
+    str = arrayToString(&time->minute, 2, ':', decimal_2);
+    cPrint(&Clock, str);
+
+    }
 
 void colorWindows() {
     Console.colorB = colors16[currColor];
@@ -29,6 +41,7 @@ void colorWindows() {
 void colorWindows1() {
     Info.colorB = colors16[currColor1];
     currColor1++;
+    Info.colorA = colors16[currColor1];
     if(currColor1 >= 15)
         currColor1 = 0;
     cClear(&Info);
@@ -79,14 +92,15 @@ void main()	{
 	TaskInit();
 
 	//addTask(testSpi, 2000, 700);
-	addTask(colorWindows, 800, 500);
+	addTask(colorWindows, 800, 30);
 	addTask(blink, 1000, 100);
-	addTask(colorWindows1, 1000, 30);
+	addTask(colorWindows1, 1000, 29);
+	addTask(printTime, 1200, 1000);
 	//addTask(ILI9341Init, 10000, 3000);
-	addTask(colorWindows, 1200, 3000);
+	//addTask(colorWindows, 1200, 3000);
 
 	while(1)	{
-        TaskDispatch();
+        TaskDispatch(); //Launch the one of ready task, if it exist
 
 }
 

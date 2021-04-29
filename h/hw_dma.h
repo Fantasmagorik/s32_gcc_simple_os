@@ -39,3 +39,4 @@ int cClear(struct _terminalWindow *console);
 
 //int SPI1DMARead(int count);
 int cScrollString(struct _terminalWindow *console);
+void DMA1_Channel3_IRQ_Task(void);
