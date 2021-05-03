@@ -20,7 +20,7 @@ int tempSymbol;
 //		while((scan_var< param && param> 1)  || scan_var< dec)	//looking for an optimal divider
 //			scan_var*= 10;
 //		if(dec != scan_var)
-//			scan_var/= 10; 
+//			scan_var/= 10;
 //		for(scan_var; scan_var; scan_var/= 10)
 //		{
 //				*currentPosition = dec/scan_var+ 48;
@@ -35,7 +35,7 @@ int tempSymbol;
 char *float_to_string(unsigned int dec, unsigned short divider, char prec)	{
 	unsigned int tempValue, tempDivider;
 	char *returnString;
-		
+
 	if( (currentPosition - stringBuffer + 10 /*for one transaction*/) >= STRING_BUFFER_LENGTH)
 		currentPosition = stringBuffer;
 	returnString = currentPosition;
@@ -73,16 +73,12 @@ char *float_to_string(unsigned int dec, unsigned short divider, char prec)	{
 	*currentPosition++ = 0;
 	return returnString;
 }
-
-
-
-
 int charToInt(char *symbol)	{
 	char *ukSymbol = symbol;
 	int multiple;
 	if( (*symbol < 48) || (*symbol > 57))
 		return 0; //not digits
-	while(*ukSymbol)	
+	while(*ukSymbol)
 		ukSymbol++;
 	tempSymbol = 0;
 	multiple = 1;
@@ -93,7 +89,6 @@ int charToInt(char *symbol)	{
 	}
 	return tempSymbol ;
 }
-
 int strlen(char *string)	{
 	int i = 0;
 	char *str = string;
@@ -102,19 +97,16 @@ int strlen(char *string)	{
 	//string -= i;
 	return i;
 }
-
-
-
 char *charToString(int value, enum toCharFormat format)	{
 	char dividerMask, digitsCount, *returnString;// = toCharBuffer;
-	int restValue = 1, div = 1;	
+	int restValue = 1, div = 1;
 	if( (format & decimal) )	{
 		dividerMask = 10;
 		digitsCount = (format & ~prolonged) - decimal;
 	}
 	else if (format & hex) 	{
 		dividerMask = 16;
-		digitsCount = (format & ~(hex_prefix + hex_little + hex_big)) - hex;  
+		digitsCount = (format & ~(hex_prefix + hex_little + hex_big)) - hex;
 	}
 	while( ((div *= dividerMask) < value) || (digitsCount > restValue) )	//looking for divider
 		restValue++;								//count of digits
@@ -138,13 +130,12 @@ char *charToString(int value, enum toCharFormat format)	{
 				else if(format & hex_little)
 					value += 39;
 				}
-			*currentPosition = value + 48;				
+			*currentPosition = value + 48;
 	}
 	if(!(format & prolonged))
 		*currentPosition = 0;
 	return returnString;
 }
-
 char *arrayToString(char *array, char length, char delim, enum toCharFormat format)	{
 	//delim is a symbol for print between values, format is
 	//1 - 3 : decimal, x- necessary digits. Example digit 10: 1- 10, 2- 10, 3- 010; 4: 1- 4, 2- 04, 3- 004
@@ -153,8 +144,8 @@ char *arrayToString(char *array, char length, char delim, enum toCharFormat form
 	char *string;
 	int totalChars = length * 4 + 1;
 	//int i;
-	if(format & hex)	
-		totalChars +=  1 + (format & hex_prefix)? 2 : 0; 
+	if(format & hex)
+		totalChars +=  1 + (format & hex_prefix)? 2 : 0;
 	if( (currentPosition - stringBuffer + totalChars + 1) > STRING_BUFFER_LENGTH)
 			currentPosition = stringBuffer;
 	string = currentPosition;
@@ -171,17 +162,13 @@ char *arrayToString(char *array, char length, char delim, enum toCharFormat form
 		*currentPosition++ = delim;
 	}
 	*(currentPosition - 1) = 0;
-	
+
 	currentPosition++;
 	return  string;
 }
-
 int bytesInChar(char symbol){
 	return 0;
 }
-
-
-
 char stringTest(char *a, char *b)	{
 	int counter = 0;
 	while(*b > 32)	{
@@ -195,12 +182,12 @@ char stringTest(char *a, char *b)	{
 			return 1;
 	//a -=	counter;
 	return(0);
-	
+
 }
 int wc(char *string, char delim)	{
-	int i = 0, x;	// 
+	int i = 0, x;	//
 	for(; *string < 33 && *string != 0; string++); //find a symbol
-	
+
 	for(; *string != 0; string++)
 		if( *string == delim) {
 			for(; *string < 33 && *string != 0; string++);
@@ -210,17 +197,17 @@ int wc(char *string, char delim)	{
 				return i;
 		}
 
-	return i;		
+	return i;
 }
 char *getOneWord(char *string, char number)	{
 	int i;
 	char *ukStartWord;// = stringBuffer;
 	char *ukString = string;
 	#define WORD_LENGTH	20
-//	
+//
 //	for(i = 0; i < STRING_BUFFER_LENGTH; i++)	 //clear buffer
 //		*ukStartWord++ = 0;
-	
+
 	if((currentPosition + WORD_LENGTH) > (stringBuffer + STRING_BUFFER_LENGTH))
 		currentPosition = stringBuffer;
 	ukStartWord = currentPosition;
@@ -242,7 +229,7 @@ char *getOneWord(char *string, char number)	{
 }
 char strcpy (char *str1, char *str2){
 	char i;
-	for(i = 0; *str1 != 0; i++, str1++, str2++) 
+	for(i = 0; *str1 != 0; i++, str1++, str2++)
 		*str2 = *str1;
 	return i;
 }

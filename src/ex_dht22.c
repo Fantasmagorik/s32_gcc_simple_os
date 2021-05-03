@@ -5,10 +5,9 @@
 #define outPP		0x3
 #define inputF	4
 #define PORTDATA	1 //GPIOA 1
-short tDMABuffer[50];
+volatile short tDMABuffer[50];
 //int DHT22Value;
 
-extern void (*pendedTask)(void);	//task will run in main cycle if not NULL
 
 	union DHT22Data DHT22Data;
 
@@ -49,16 +48,18 @@ int DHT22GetValue()	{
 			DHT22CRC += (1 << (i - 1));
 	}
 	//check CRC
+	addTask(DHT22Start, 1, 0);
 	for(i = 0, byte = (char*)&DHT22Data.value, checksum = 0; i < 4; i++)
 		checksum += *(byte + i);
 	if(checksum != DHT22CRC)
 		return 0;
 	if(DHT22Data.structShort.temp & 0x8000)
-	addTask(DHT22Start, 1, 0);
+
 	return DHT22Data.value;
 }
 
 void DHT22Start()	{
+    int i;
 	TIM2->CR1 = 0;
 	TIM2->CNT = 0;
 //	DHT22Bits = 0;
@@ -69,7 +70,8 @@ void DHT22Start()	{
 	GPIOA->CRL |= 0x30;
 	//[ull down DATA pin for at least 2 millis
 	GPIOA->BRR = 2;
-	delay_ms(2);
+	//delay_ms(3);
+	for(i = 1000; i; i--);
 	GPIOA->BSRR = 2;
 	//reconfigure DAtA pin for using timer
 	GPIOA->CRL	&= ~0xf0;

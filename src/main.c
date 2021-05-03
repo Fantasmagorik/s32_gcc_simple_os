@@ -5,6 +5,7 @@
 #include "ex_ili9341.h"
 #include "hw_rtc.h"
 #include "logic.h"
+#include "ex_dht22.h"
 
 ftime_t *time;
 
@@ -14,11 +15,14 @@ struct _fontInformation* fontLucida10Init();
 struct _fontInformation *curFont;
 
 
-struct _terminalWindow Console, Info, Clock;
-extern const short unsigned colors16 [] ;
+struct _terminalWindow Console, Info, Clock, DHT;
+extern const short unsigned colors16[] ;
 
 uint16_t currColor = 0;
 uint16_t currColor1 = 13;
+
+union DHT22Data dhtData;
+    char *str;
 
 void printTime()    {
     char *str;
@@ -28,12 +32,20 @@ void printTime()    {
     cPrint(&Clock, str);
 
     }
+void printDHT22()   {
 
+    dhtData.value= DHT22GetValue();
+    //str = float_to_string(dhtData.structShort.temp, decimal_1);
+    cClear(&DHT);
+    cPrint(&DHT, float_to_string(dhtData.structShort.temp, 10, 2));
+
+}
 void colorWindows() {
     Console.colorB = colors16[currColor];
     currColor++;
-    if(currColor >= 15)
+    if(currColor >= 9)
         currColor = 0;
+    Console.colorA = colors16[currColor];
     cClear(&Console);
     cPrint(&Console, "CONSOLE window present");
 }
@@ -42,7 +54,7 @@ void colorWindows1() {
     Info.colorB = colors16[currColor1];
     currColor1++;
     Info.colorA = colors16[currColor1];
-    if(currColor1 >= 15)
+    if(currColor1 >= 9)
         currColor1 = 0;
     cClear(&Info);
     cPrint(&Info, "INFO window here");
@@ -87,15 +99,25 @@ void main()	{
 	Clock.position.yS = 5;
 	Clock.position.yE = 35;
 
+	DHT.colorA = 0xffb0;
+	DHT.colorB = 0x0;
+	DHT.font = Console.font;
+	DHT.position.xS = 235;
+	DHT.position.xE = 319;
+	DHT.position.yS = 40;
+	DHT.position.yE = 75;
 
+	//cClear(&Console);
 	//delay_ms(500);
 	TaskInit();
 
 	//addTask(testSpi, 2000, 700);
-	addTask(colorWindows, 800, 30);
+	addTask(colorWindows, 800, 230);
 	addTask(blink, 1000, 100);
-	addTask(colorWindows1, 1000, 29);
+	addTask(colorWindows1, 1000, 79);
 	addTask(printTime, 1200, 1000);
+	//addTask(DHT22Start, 1000, 1100);
+	addTask(printDHT22, 2200, 2000);
 	//addTask(ILI9341Init, 10000, 3000);
 	//addTask(colorWindows, 1200, 3000);
 

@@ -39,6 +39,7 @@ int hwInit()
     //delay_ms(200);
     DMAInit();
     RTCSetState(enable);
+    DHT22Init();
     //UART3SendString("\r\nILI9341 Init  FAIL\r\n");
 
 }

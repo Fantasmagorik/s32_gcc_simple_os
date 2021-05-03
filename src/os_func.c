@@ -61,7 +61,7 @@ void TaskDispatch()
     void (*func)();
     uint16_t i, x;
     struct _task *task;
-    for(i = 0, x = (currentTaskActive + 1 >= TASK_COUNT)? 0: ++x; i < TASK_COUNT; i++)
+    for(i = 0, x = currentTaskActive, x = (x + 1 >= TASK_COUNT)? 0: ++x; i < TASK_COUNT; i++)
     {
         task = (struct _task*) TASKS + x;
 
