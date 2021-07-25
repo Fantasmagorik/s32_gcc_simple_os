@@ -29,7 +29,7 @@ void DHT22Init()	{
 
 }
 
-int DHT22GetValue()	{
+unsigned int DHT22GetValue()	{
 	int i, mask;
 	char checksum, *byte, DHT22CRC;
 
@@ -48,12 +48,12 @@ int DHT22GetValue()	{
 			DHT22CRC += (1 << (i - 1));
 	}
 	//check CRC
-	addTask(DHT22Start, 1, 0);
+	addTask(DHT22Start, 0, 0);
 	for(i = 0, byte = (char*)&DHT22Data.value, checksum = 0; i < 4; i++)
 		checksum += *(byte + i);
 	if(checksum != DHT22CRC)
 		return 0;
-	if(DHT22Data.structShort.temp & 0x8000)
+	//if(DHT22Data.structShort.temp & 0x8000)
 
 	return DHT22Data.value;
 }

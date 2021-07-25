@@ -57,7 +57,7 @@ int cNL(struct _terminalWindow *console)
 #include "hw_spi.h"
     int offset = 0, i;
     short data;
-    if(console->posY + console->font->height * 2 + offset <= console->position.yE) 	//if window has enough place for new string
+    if(console->posY + console->font->height * 2 + offset <= (console->position.yPosition + console->position.yHeight) )	//if window has enough place for new string
     {
         console->posY += console->font->height;
     }
@@ -67,7 +67,7 @@ int cNL(struct _terminalWindow *console)
 
     }
 
-    console->posX = console->position.xS;
+    console->posX = console->position.xPosition;
     return 0;
 }
 struct _dmaTask* getDMATask()
@@ -192,12 +192,12 @@ void SPI1DMAFill(short xS, short xE, short yS, short yE, short color)
     }	//no place for the task
 
     task->countOfData = (xE - xS + 1) * (yE - yS + 1);
-    task->coord.xS				= xS;
-    task->coord.xE 				= xE;
-    task->coord.yS 				= yS;
-    task->coord.yE 				= yE;
+    task->xS				    = xS;
+    task->xE        			= xE;
+    task->yS 			    	= yS;
+    task->yE 				    = yE;
     task->data.color			= color;
-    task->transmittedData	=	0;
+    task->transmittedData	    = 0;
     task->operation				= Fill;
     if( (SPI1->SR & SPI_SR_BSY) == 0) 	//wake-up DMA Channel, if SPI not under communicate
         NVIC_SetPendingIRQ(DMA1_Channel3_IRQn);
@@ -217,9 +217,9 @@ void DMA1_Channel2_IRQHandler()	 	//SPI1 RX
 //	yS = exDMATask.service.terminalWindow->position.yS;
 //	yE = yS + exDMATask.service.terminalWindow->font->height - 1;
 
-    xS = exDMATask.service.terminalWindow->position.xS;
+    xS = exDMATask.service.terminalWindow->position.xPosition;
     xE = 40;//exDMATask.service.terminalWindow->position.xE;
-    yS = exDMATask.service.terminalWindow->position.yS;
+    yS = exDMATask.service.terminalWindow->position.yPosition;
     yE = yS + exDMATask.service.terminalWindow->font->height - 1;
     exclusiveDMATransmitt = 1;
 
@@ -264,7 +264,7 @@ void DMA1_Channel3_IRQ_Task()
     {
         if(task->transmittedData == 0)   //first transaction in that task
         {
-            ILI9341SetPosition(task->coord.xS, task->coord.xE, task->coord.yS, task->coord.yE);
+            ILI9341SetPosition(task->xS, task->xE, task->yS, task->yE);
             ILI9341SendCmd(0x2C);
             ILI9341ChipSelect(0);
         }
@@ -318,7 +318,7 @@ void DMA1_Channel3_IRQ_Task()
             x = task->service.terminalWindow->font->letterOffset * 4;
         else
             x = (task->service.terminalWindow->font->lettersInfoStart + (i - 33))->width;	//charToInt width
-        if((i == '\n')  || ((pX + task->service.terminalWindow->font->letterOffset + x) >= task->service.terminalWindow->position.xE) ) 	//new string symbol
+        if((i == '\n')  || ((pX + task->service.terminalWindow->font->letterOffset + x) >= (task->service.terminalWindow->position.xPosition + task->service.terminalWindow->position.xWidth) ) )	//new string symbol
         {
             cNL(task->service.terminalWindow);
             if( (i == '\n') || (i == 0xd) )
@@ -404,9 +404,9 @@ int getLetterImage(char symbol, struct _bufferInfo *buff, struct _terminalWindow
 
 int cClear(struct _terminalWindow *console)
 {
-    SPI1DMAFill(console->position.xS, console->position.xE, console->position.yS, console->position.yE, console->colorB);
-    console->posX = console->position.xS;
-    console->posY = console->position.yS;
+    SPI1DMAFill(console->position.xPosition, console->position.xPosition + console->position.xWidth, console->position.yPosition, console->position.yPosition + console->position.yHeight, console->colorB);
+    console->posX = console->position.xPosition;
+    console->posY = console->position.yPosition;
     return 0;
 }
 int cPrint(struct _terminalWindow *console, char *string)
@@ -417,9 +417,9 @@ int cPrint(struct _terminalWindow *console, char *string)
         return 0;
     }	//
     task ->countOfData 						= strlen(string);
-    task->data.addressOfData 			= string;
-    task->service.terminalWindow	=	console;
-    task->transmittedData					=	0;
+    task->data.addressOfData 			    = string;
+    task->service.terminalWindow	        = console;
+    task->transmittedData					= 0;
     task->operation							= Print;
     if( (SPI1->SR & SPI_SR_BSY) == 0) 	//wake-up DMA Channel, if SPI not under communicate
         NVIC_SetPendingIRQ(DMA1_Channel3_IRQn);
@@ -434,10 +434,9 @@ int cScrollString(struct _terminalWindow *console)
     //PRINTBUFFERLENGTH //buffer length in word
     //console->font->height	// 	line height
     exDMATask.service.terminalWindow = console;
-    xS = console->position.xS;
+    xS = console->position.xPosition;
     xE = 40;
-    console->position.xE;
-    yS = console->position.yS + console->font->height * 7;
+    yS = console->position.yPosition + console->font->height * 7;
     yE = yS + console->font->height - 1;
 
 //	xS = 0;

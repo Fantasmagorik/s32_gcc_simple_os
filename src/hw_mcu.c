@@ -45,7 +45,6 @@ int hwInit()
 }
 
 
-
 int SysTickInit()
 {
 

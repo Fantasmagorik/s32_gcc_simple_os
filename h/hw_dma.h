@@ -29,7 +29,7 @@ struct _dmaTask{
 		struct _terminalWindow *terminalWindow;
 	}service;
 	int transmittedData;
-	struct coordinates coord;
+	unsigned short xS, xE, yS, yE;
 };
 
 

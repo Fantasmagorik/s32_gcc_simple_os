@@ -233,15 +233,16 @@ char strcpy (char *str1, char *str2){
 		*str2 = *str1;
 	return i;
 }
-int stradd(char *a, char *b)	{
+char *stradd(char *a, char *b)	{
 	int counter = 0;
-	while(*a++)
-		if(*a <= 32)
-			break;
+	char *str = a;
+	while(*a++);
+    //--a;
 	while(*b){
 		*a++ = *b++;
 		counter++;
 	}
 	*a = 0;
-	return counter;
+	currentPosition = ++a;
+	return str;
 }

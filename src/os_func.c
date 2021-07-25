@@ -24,16 +24,17 @@ void TaskInit()
     TASK_EN = 1;
 }
 
-int TaskFind(callback func) {
+int TaskFind(callback func)
+{
     int i;
     struct _task *task;
-    for(i = 0, task = TASKS; i < TASK_COUNT; i++) {
+    for(i = 0, task = TASKS; i < TASK_COUNT; i++)
+    {
         if(task->func == func)
             return i + 1;
-        }
+    }
     return 0;
 }
-
 
 int addTask(callback func, uint16_t delay, uint16_t repeat)
 {
@@ -64,7 +65,6 @@ void TaskDispatch()
     for(i = 0, x = currentTaskActive, x = (x + 1 >= TASK_COUNT)? 0: ++x; i < TASK_COUNT; i++)
     {
         task = (struct _task*) TASKS + x;
-
         if((task->delay == 0) && (task->func))
         {
             func = task->func;
@@ -73,11 +73,9 @@ void TaskDispatch()
                 task->delay = task->repeat;
             else
                 task->func = 0;
-
             func();     //now its a C function call, will improved to switch context asm paste
             break;
         }
-
         x = (++x >= TASK_COUNT)? 0: x;
     }
 }
@@ -87,15 +85,6 @@ void TaskTick()
     int i;
     struct _task *task;
     for(i = 0, task = TASKS; i < TASK_COUNT; i++, task++)
-    {
         if(task->delay)
-        {
             --task->delay;
-            if(task->delay == 0)
-            {
-                //launch the task
-                asm("nop");
-            }
-        }
-    }
 }

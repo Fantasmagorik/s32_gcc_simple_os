@@ -15,7 +15,7 @@ enum SETState{
      enable};
 
 struct coordinates{
-	short xS, yS, xE, yE;
+	short xPosition, yPosition, xWidth, yHeight;
 };
 		//struct _fontType{
 			#define fontTypeNumeric  				1;
