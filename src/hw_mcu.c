@@ -2,8 +2,9 @@
 #include "common_types.h"
 #define BLINK_IO    13
 
-extern int TASK_EN;
-volatile uint32_t delayValue;
+extern int          TASK_EN;
+uint32_t            u_sec;
+volatile uint32_t   delayValue;
 
 int RCCInit()
 {
@@ -48,17 +49,13 @@ int hwInit()
 int SysTickInit()
 {
 
-    //According fresh ideas use 500Hz sys_tick for delay as a part and the full task_manager (later)
+    u_sec = 0;
     RCC->APB2ENR	|= RCC_APB2ENR_IOPCEN;
     GPIOC->CRH |= 3<<20; //gen push-pull for pc13
 
     SysTick->CTRL= 0;
     SysTick->LOAD= 72000;///*0x6ddd00;//*/MILLIS; //every 1 ms
     SysTick->CTRL= 7; //enable timer and allow interrupt request
-
-    //NVIC_EnableIRQ(SysTick_IRQn);		//!! System interrupt vectors doesnt need any manipulations
-    //__NVIC_SetPriority(SysTick_IRQn, 13);//?
-
 
     return 0;
 
@@ -68,6 +65,7 @@ int SysTickInit()
 void SysTick_Handler()	 	//every 1 microsecond
 {
     SysTick->VAL = 0;	//it`s clear Pending bit
+    u_sec++;
     //GPIOC->ODR ^= BLINK_IO;
     if(delayValue)
         delayValue--;

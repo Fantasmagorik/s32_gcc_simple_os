@@ -7,6 +7,7 @@
 #include "logic.h"
 #include "ex_dht22.h"
 
+extern uint32_t    lastTimeStatisticsCollect, COUNT_OF_WAIT_PROCESSES, COUNT_OF_ALL_PROCESSES;
 ftime_t *time;
 
 struct _fontInformation* fontArial24Init(void);
@@ -14,8 +15,10 @@ struct _fontInformation* fontCentury16Init();
 struct _fontInformation* fontLucida10Init();
 struct _fontInformation *curFont;
 
+char buffStatistics[300];
 
-struct _terminalWindow Console, Info, Clock, DHT, DHT1;
+
+struct _terminalWindow Console, Info, Clock, DHT, DHT1, statistics;
 extern const short unsigned colors16[] ;
 
 uint16_t currColor = 0;
@@ -69,7 +72,21 @@ void testSpi()  {
     while(SPI1->SR & SPI_SR_BSY);
     SPI1->DR = 200;
 }
+void printStatistics()  {
+    int i;
+    char *ptrBuffer = buffStatistics;
+    buffStatistics[20] = 0;
+    cClear(&statistics);
+    *ptrBuffer = 0;
+    //stradd(ptrBuffer, "All tasks: ");
 
+    //stradd(ptrBuffer, "\nWait: ");
+    //stradd(ptrBuffer, float_to_string(COUNT_OF_WAIT_PROCESSES, 1, 1));
+    *(ptrBuffer + bytesInChar(buffStatistics) + 1) = 0;
+    cPrint(&statistics, "Statistics\nwindow");
+
+
+}
 void main()	{
 	int i;
 	struct coordinates coord, coord1, coord2, *pos = &coord;
@@ -78,28 +95,36 @@ void main()	{
 
 
     SPI1DMAFill(0, 319, 0, 239, CYAN);
-	Console.colorA                  = 0xffff;//0xca82;
-	Console.colorB                  = 0x0;
+	Console.colorA                  = WHITE;//0xca82;
+	Console.colorB                  = BLACK;
 	Console.font                    = fontCentury16Init();
 	Console.position.xPosition	    = 0;
 	Console.position.xWidth	        = 319;
 	Console.position.yPosition	    = 110;
 	Console.position.yHeight        = 110;
-	Info.colorA                     = 0xffff;
-	Info.colorB                     = 0x03EF;
+	Info.colorA                     = BLACK;
+	Info.colorB                     = DCYAN;
 	Info.font                       = fontLucida10Init();
 	Info.position.xPosition         = 0;
 	Info.position.xWidth            = 319;
 	Info.position.yPosition         = 221;
 	Info.position.yHeight           = 18;
 
-	Clock.colorA                    = 0xffb0;
-	Clock.colorB                    = 0x0;
+	Clock.colorA                    = BLACK;
+	Clock.colorB                    = CYAN;
 	Clock.font                      = Console.font;
 	Clock.position.xPosition        = 255;
 	Clock.position.xWidth           = 57;
 	Clock.position.yPosition        = 5;
 	Clock.position.yHeight          = 30;
+
+	statistics.position.xPosition   = 0;
+	statistics.position.yPosition   = 0;
+	statistics.position.xWidth      = 230;
+	statistics.position.yHeight     = 90;
+	statistics.font                 = Clock.font;
+	statistics.colorA               = BLACK;
+	statistics.colorB               = DCYAN;
 
     DHT = Clock;
     DHT.position.yPosition += 32;
@@ -125,6 +150,8 @@ void main()	{
 	addTask(printTime, 1200, 1000);
 	//addTask(DHT22Start, 1000, 1100);
 	addTask(printDHT22, 1200, 1100);
+	addTask(statisticsPrepare, 900, 1000);
+	addTask(printStatistics, 1200, 1000);
 	//addTask(ILI9341Init, 10000, 3000);
 	//addTask(colorWindows, 1200, 3000);
 

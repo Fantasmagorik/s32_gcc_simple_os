@@ -243,6 +243,6 @@ char *stradd(char *a, char *b)	{
 		counter++;
 	}
 	*a = 0;
-	currentPosition = ++a;
+	//currentPosition = ++a;
 	return str;
 }
